@@ -1,18 +1,19 @@
 import React, {Component} from 'react';
-// import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
-import { Table } from 'react-bootstrap'
+import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
 import './App.css';
 
 class DataTable extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            dataBaseJSON: {},
-            dataBaseItems: []
+            dataBaseJSON: null,
+            dataBaseItems: null,
         };
+
+
     }
 
-    componentDidMount() {
+    componentWillMount() {
         fetch('https://ghibliapi.herokuapp.com/films').then(results => {
             return results.json();
 
@@ -20,63 +21,23 @@ class DataTable extends Component {
             this.setState({
                 dataBaseJSON: jsonResults
             });
-            return jsonResults
+            console.log("Data mounted");
+        });
 
-        }).then(jsonResults => {
-            Object.keys(jsonResults).forEach(movieObject => {
-                let currentRowNum = this.state.dataBaseItems.length;
-                console.log(currentRowNum);
-                this.setState({
-                    // Using spread attributes " ... " below to expand the array object
-                    dataBaseItems:
-                        [
-                            ...this.state.dataBaseItems, <DataRow rowNum={currentRowNum + 1 }
-                                                                  key={this.state.dataBaseJSON[movieObject].id}
-                                                                  item={this.state.dataBaseJSON[movieObject]}/>
-                        ]
-                });
-            });
-        })
     }
 
     render() {
 
         return (
-            <Table striped bordered condensed hover>
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Title</th>
-                    <th>Director</th>
-                    <th>Producer</th>
-                    <th>Release Date</th>
-                    <th>Rotten Tomato Score</th>
-                </tr>
-                </thead>
-                <tbody>
-                {this.state.dataBaseItems}
-                </tbody>
-            </Table>
+            <BootstrapTable striped hover exportCSV data={this.state.dataBaseJSON} pagination = {true} options = {{'sizePerPage': 5}}>
+                <TableHeaderColumn dataField='id' isKey={true} hidden={true}>Id</TableHeaderColumn>
+                <TableHeaderColumn dataField='title'>Title</TableHeaderColumn>
+                <TableHeaderColumn dataField='director'>Director</TableHeaderColumn>
+                <TableHeaderColumn dataField='title'>Producer</TableHeaderColumn>
+                <TableHeaderColumn dataField='release_date'>Release Date</TableHeaderColumn>
+                <TableHeaderColumn dataField='rt_score'>RT Score</TableHeaderColumn>
+            </BootstrapTable>
 
-        )
-    }
-}
-
-// This is the react component for the data rows, that we collect from
-// the database we connect and add data to. The <td> comes from the
-// parent component
-// <tr> is the table row, and <td> is the table data
-class DataRow extends Component {
-    render() {
-        return (
-            <tr>
-                <td>{this.props.rowNum}</td>
-                <td>{this.props.item.title}</td>
-                <td>{this.props.item.director}</td>
-                <td>{this.props.item.producer}</td>
-                <td>{this.props.item.release_date}</td>
-                <td>{this.props.item.rt_score}</td>
-            </tr>
         )
     }
 }
