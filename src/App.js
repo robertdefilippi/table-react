@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 // import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table'
+import { Table } from 'react-bootstrap'
 import './App.css';
 
 class DataTable extends Component {
@@ -41,7 +42,7 @@ class DataTable extends Component {
     render() {
 
         return (
-            <table striped bordered condensed hover>
+            <Table striped bordered condensed hover>
                 <thead>
                 <tr>
                     <th>ID</th>
@@ -55,7 +56,7 @@ class DataTable extends Component {
                 <tbody>
                 {this.state.dataBaseItems}
                 </tbody>
-            </table>
+            </Table>
 
         )
     }
