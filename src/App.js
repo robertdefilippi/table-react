@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {DropdownButton, MenuItem, ButtonToolbar, Jumbotron} from 'react-bootstrap'
+import {DropdownButton, MenuItem, ButtonToolbar, Jumbotron, Well} from 'react-bootstrap'
 import './App.css';
 import VehcilesDataTable from "./APIComponents/VehiclesTable";
 import PeopleDataTable from "./APIComponents/PeopleTable";
@@ -32,7 +32,7 @@ class App extends Component {
             case "People":
                 return <PeopleDataTable/>;
             default:
-                return <p>Nothing currently selected</p>;
+                return <Well>Nothing currently selected</Well>;
         }
     }
 
@@ -60,7 +60,7 @@ class App extends Component {
                         </DropdownButton>
                     </ButtonToolbar>
                 </Jumbotron>
-                <div>{this.handleSetTableContainer()}</div>
+                <div style={{'padding': '0 20px 0 20px'}}>{this.handleSetTableContainer()}</div>
             </div>
 
         );
