@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
-import './App.css';
 
 
 export default class VehcilesDataTable extends Component {

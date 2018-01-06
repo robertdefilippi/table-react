@@ -1,52 +1,9 @@
 import React, {Component} from 'react';
-import {BootstrapTable, TableHeaderColumn} from 'react-bootstrap-table'
-import {DropdownButton, MenuItem, ButtonToolbar} from 'react-bootstrap'
+import {DropdownButton, MenuItem, ButtonToolbar, Jumbotron} from 'react-bootstrap'
 import './App.css';
-import './VehiclesTable.js';
-import VehcilesDataTable from "./VehiclesTable";
-
-// TODO Add ability to choose which API from Gihbli you want to access
-
-class DataTable extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            dataBaseJSON: null,
-            dataBaseItems: null,
-        };
-
-
-    }
-
-    componentWillMount() {
-        fetch('https://ghibliapi.herokuapp.com/films').then(results => {
-            return results.json();
-
-        }).then(jsonResults => {
-            this.setState({
-                dataBaseJSON: jsonResults
-            });
-            console.log("Data mounted");
-        });
-
-    }
-
-    render() {
-
-        return (
-            <BootstrapTable striped hover exportCSV data={this.state.dataBaseJSON} pagination={true}
-                            options={{'sizePerPage': 5}}>
-                <TableHeaderColumn dataField='id' isKey={true} hidden={true}>Id</TableHeaderColumn>
-                <TableHeaderColumn dataField='title'>Title</TableHeaderColumn>
-                <TableHeaderColumn dataField='director'>Director</TableHeaderColumn>
-                <TableHeaderColumn dataField='title'>Producer</TableHeaderColumn>
-                <TableHeaderColumn dataField='release_date'>Release Date</TableHeaderColumn>
-                <TableHeaderColumn dataField='rt_score'>RT Score</TableHeaderColumn>
-            </BootstrapTable>
-
-        )
-    }
-}
+import VehcilesDataTable from "./APIComponents/VehiclesTable";
+import PeopleDataTable from "./APIComponents/PeopleTable";
+import MovieDataTable from "./APIComponents/MovieTable";
 
 class App extends Component {
     constructor(props) {
@@ -65,14 +22,15 @@ class App extends Component {
         });
     }
 
+    // Render different components based on the state
     handleSetTableContainer() {
         switch (this.state.currentTable) {
             case "Movies":
-                console.log("Movies!");
-                return <DataTable />;
+                return <MovieDataTable/>;
             case "Vehicles":
-                console.log("Vehicles");
-                return <VehcilesDataTable />;
+                return <VehcilesDataTable/>;
+            case "People":
+                return <PeopleDataTable/>;
             default:
                 return <p>Nothing currently selected</p>;
         }
@@ -81,19 +39,28 @@ class App extends Component {
     render() {
         return (
             <div>
-                <h1 className="App-title">Welcome to the Studio Gihbli API</h1>
-                <h2 className="App-title">You're currently looking at {this.state.currentTable === "Null" ? "Nothing" : this.state.currentTable} </h2>
-                <ButtonToolbar>
-                    <DropdownButton
-                        bsStyle={'default'}
-                        title={'Change Studio Gihbli API'}
-                        id={1}>
-                        <MenuItem name="Movies" onClick={e => this.handleSetCurrentTableState(e.target.name)}>Movies</MenuItem>
-                        <MenuItem name="Vehicles" onClick={e => this.handleSetCurrentTableState(e.target.name)}>Vehicles</MenuItem>
-                        <MenuItem name="Null" onClick={e => this.handleSetCurrentTableState(e.target.name)}>Nothing</MenuItem>
-                    </DropdownButton>
-                </ButtonToolbar>
-                    <div>{this.handleSetTableContainer()}</div>
+                <Jumbotron style={{'paddingLeft': '20px'}}>
+                    <h1>Welcome to the Studio Gihbli API</h1>
+                    <h3>Select what you would like to see from the dropdown button below.</h3>
+                    <h4>You're currently looking
+                        at {this.state.currentTable === "" ? "nothing." : this.state.currentTable + "."} </h4>
+                    <ButtonToolbar>
+                        <DropdownButton
+                            bsStyle={'default'}
+                            title={'Change Studio Gihbli API'}
+                            id={1}>
+                            <MenuItem name="Movies"
+                                      onClick={e => this.handleSetCurrentTableState(e.target.name)}>Movies</MenuItem>
+                            <MenuItem name="Vehicles"
+                                      onClick={e => this.handleSetCurrentTableState(e.target.name)}>Vehicles</MenuItem>
+                            <MenuItem name="People"
+                                      onClick={e => this.handleSetCurrentTableState(e.target.name)}>People</MenuItem>
+                            <MenuItem name="Null"
+                                      onClick={e => this.handleSetCurrentTableState(e.target.name)}>Nothing</MenuItem>
+                        </DropdownButton>
+                    </ButtonToolbar>
+                </Jumbotron>
+                <div>{this.handleSetTableContainer()}</div>
             </div>
 
         );
